@@ -16,7 +16,10 @@ In order to use the application, a recent browser and internet access are requir
 
 Instructions
 ============
+To run:
 1. Download or fork the application from: https://github.com/robertoguiotto/FEND-P7
 2. Select index.html to start the app
-3. Use filter box and press "Find" to filter list items and map markers
-4. Select a list item or map marker to open an info window describing the marker: the application will display the selected place along with the information retrieved from Wikipedia.
+
+To use:
+1. Use filter box and press "Find" to filter list items and map markers
+2. Select a list item or map marker to open an info window describing the marker: the application will display the selected place along with the information retrieved from Wikipedia.
