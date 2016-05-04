@@ -53,7 +53,7 @@
                 </form>
 
                 <div class="list-group" data-bind="foreach: {data: myMap.locations, as: 'location'} ">
-                    <div class="list-group-item" data-bind="visible: location.display">
+                    <div class="list-group-item" data-bind="visible: location.display, click: function () { myMap.search(location.name); myMap.filterMarkers(); }">
                         <span data-bind="text: location.name"></span><br />
                         <small data-bind="text: location.street"></small>
                     </div>

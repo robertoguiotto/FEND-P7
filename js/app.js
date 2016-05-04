@@ -22,7 +22,7 @@ var myMap = {
             lat: 45.4379842,
             lng: 12.335898,
             marker: null,
-            wiki: "Rialto Bridge", // mandatory for Wikipedia API call
+            wiki: "Rialto Bridge", // necessary for Wikipedia API call
             display: ko.observable(1) //set ko.observable to being visibile
         }, {
             name: "Train Station",
@@ -31,7 +31,7 @@ var myMap = {
             lat: 45.4410697,
             lng: 12.3210436,
             marker: null,
-            wiki: "Venezia Santa Lucia railway station", // mandatory for Wikipedia API call
+            wiki: "Venezia Santa Lucia railway station", // necessary for Wikipedia API call
             display: ko.observable(1) //set ko.observable to being visibile
         }, {
             name: "Arsenale",
@@ -40,7 +40,7 @@ var myMap = {
             lat: 45.4348502,
             lng: 12.3499009,
             marker: null,
-            wiki: "Venetian Arsenal", // mandatory for Wikipedia API call
+            wiki: "Venetian Arsenal", // necessary for Wikipedia API call
             display: ko.observable(1) //set ko.observable to being visibile
         }, {
             name: "Piazza San Marco",
@@ -49,29 +49,30 @@ var myMap = {
             lat: 45.4344187,
             lng: 12.338526,
             marker: null,
-            wiki: "Piazza San Marco", // mandatory for Wikipedia API call
+            wiki: "Piazza San Marco", // necessary for Wikipedia API call
             display: ko.observable(1) //set ko.observable to being visibile
         }
     ]), //closing observableArray
     infoContent: function (location, callback) {
         // render the info shown in infoWindow
         var wikiUrl = 'https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro=&explaintext=&titles=' + location.wiki + '&callback=wikiCallback';
-        var wikiRequestTimeout = setTimeout(function () { $('body').prepend("<div class='alert alert-danger'>Failed to get wikipedia resources</div>"); }, 8000);
 
         $.ajax({
             url: wikiUrl,
             dataType: "jsonp",
             jsonp: "callback",
+            timeout: 8000, // required for jsonp calls and error handling
             success: function (data) {
                 var info = '<h2>' + location.name + '</h2>';
                 info += '<p>' + location.street + '</p>';
                 if (data.hasOwnProperty('query')) {
-                    clearTimeout(wikiRequestTimeout);
-                    for (var i in data.query.pages) { info += '<br />' + data.query.pages[i].extract; }
+                    for (var i in data.query.pages) {
+                        info += '<br />' + data.query.pages[i].extract;
+                    }
                 }
                 callback(info);
             }
-        });
+        }).fail(function () { $('body').prepend("<div class='alert alert-danger'>Failed to get wikipedia resources</div>"); });;
     },
     filterMarkers: function () { // adding location selection
         var self = this, info = '';
@@ -79,15 +80,16 @@ var myMap = {
             var show = false;
             if (location.name.toLowerCase().indexOf(self.search().toLowerCase()) > -1) {
                 show = true;
+                location.marker.setMap(map);
                 self.infoContent(location, function (info) {
                     infoWindow.setContent(info);
                     infoWindow.open(map, location.marker);
                     toggleBounce(location.marker);
                 });
             }
+            else { location.marker.setMap(null); }
             location.display(show);
         });
-        initializeMap();
     }
 }; // closing myMap
 
